@@ -10,12 +10,11 @@ var Peon = function () {
 Peon.prototype.init = function () {
 	this.loadVariables();
 	this.preloadImages(imagesToPreload);
-	this.setContentMinHeight(this.content, this.nav, this.footer);
 	this.handleConsole();
 	this.handlePhoneLinks(this.phoneLink);
 	this.bindListeners();
 	if(this.isIE()) {
-		$("body").addClass('ie');
+		this.bodyElement.addClass('ie');
 	}
 }
 
@@ -25,7 +24,6 @@ Peon.prototype.bindListeners = function () {
 	window.addEventListener("resize", function() {
 		_this.windowHeight = _this.getWindowHeight();
 		_this.windowWidth = _this.getWindowWidth();
-		_this.setContentMinHeight(_this.content, _this.nav, _this.footer);
 	}, false);
 }
 
@@ -35,6 +33,7 @@ Peon.prototype.loadVariables = function () {
 	this.footer = document.getElementsByClassName('Footer--sticky');
 	this.errorPage = document.getElementsByClassName('.error-section');
 	this.phoneLink = document.getElementsByClassName('.Phone');
+	this.bodyElement = document.getElementsByTagName("body")[0];
 	this.disabledClass = 'Disabled';
 	this.imgFolder = '/img/';
 	this.smoothScroll = '[data-scroll]';
@@ -280,14 +279,6 @@ Peon.prototype.getMaxHeightElement = function (target) {
 	maxHeight = Math.max.apply(null, heights);
 	return maxHeight;
 }
-
-Peon.prototype.handleErrorPage = function () {
-	if(!this.errorPage.length) {
-		return;
-	}
-	$("body").addClass('error-page');
-}
-
 
 $(document).ready(function() {
 	peon = new Peon();
