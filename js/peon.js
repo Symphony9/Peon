@@ -1,13 +1,13 @@
-var app,
+var peon,
 	imagesToPreload = [
 		'placeholder.jpg'
 	];
 
-var App = function () {
+var Peon = function () {
 	this.init();
 }
 
-App.prototype.init = function () {
+Peon.prototype.init = function () {
 	this.loadVariables();
 	this.preloadImages(imagesToPreload);
 	this.setContentMinHeight(this.content, this.nav, this.footer);
@@ -19,26 +19,22 @@ App.prototype.init = function () {
 	}
 }
 
-App.prototype.bindListeners = function () {
+Peon.prototype.bindListeners = function () {
 	var _this = this;
 	this.bindElSmoothScroll(this.smoothScroll);
-	$(window).resize(function() {
-		_this.windowHeight = _this.getWindowHeight();
-		_this.windowWidth = _this.getWindowWidth();
-		_this.setContentMinHeight(_this.content, _this.nav, _this.footer);	
-	});
 	window.addEventListener("resize", function() {
 		_this.windowHeight = _this.getWindowHeight();
 		_this.windowWidth = _this.getWindowWidth();
+		_this.setContentMinHeight(_this.content, _this.nav, _this.footer);
 	}, false);
 }
 
-App.prototype.loadVariables = function () {
+Peon.prototype.loadVariables = function () {
 	this.content = document.getElementsByClassName('Content');
 	this.nav = document.getElementsByClassName('Navbar');
 	this.footer = document.getElementsByClassName('Footer--sticky');
-	this.errorPage = $(".error-section");
-	this.phoneLink = $(".Phone");
+	this.errorPage = document.getElementsByClassName('.error-section');
+	this.phoneLink = document.getElementsByClassName('.Phone');
 	this.disabledClass = 'Disabled';
 	this.imgFolder = '/img/';
 	this.smoothScroll = '[data-scroll]';
@@ -59,7 +55,7 @@ App.prototype.loadVariables = function () {
  * @param null
  * @returns number
  */
-App.prototype.getWindowWidth = function () {
+Peon.prototype.getWindowWidth = function () {
 	return window.innerWidth;
 }
 
@@ -69,7 +65,7 @@ App.prototype.getWindowWidth = function () {
  * @param null
  * @returns number
  */
-App.prototype.getWindowHeight = function () {
+Peon.prototype.getWindowHeight = function () {
 	return window.innerHeight;
 }
 
@@ -79,7 +75,7 @@ App.prototype.getWindowHeight = function () {
  * @param null
  * @returns boolean
  */
-App.prototype.getUserNavigator = function () {
+Peon.prototype.getUserNavigator = function () {
 	return navigator.userAgent;
 }
 
@@ -89,7 +85,7 @@ App.prototype.getUserNavigator = function () {
  * @param null
  * @returns boolean
  */
-App.prototype.isMobile = function () {
+Peon.prototype.isMobile = function () {
 	return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(this.getUserNavigator());
 }
 
@@ -99,7 +95,7 @@ App.prototype.isMobile = function () {
  * @param null
  * @returns boolean
  */
-App.prototype.isIE = function () {
+Peon.prototype.isIE = function () {
 	var userAgent = this.getUserNavigator();
 	if(userAgent.match('MSIE ') || userAgent.match('Trident/') || userAgent.match('Edge/') || userAgent.match('/rv 11/')) {
 		return true;
@@ -113,7 +109,7 @@ App.prototype.isIE = function () {
  * @param null
  * @returns string
  */
-App.prototype.getCurrentUrl = function () {
+Peon.prototype.getCurrentUrl = function () {
 	return window.location.href;
 }
 
@@ -123,7 +119,7 @@ App.prototype.getCurrentUrl = function () {
  * @param url
  *
  */
-App.prototype.redirectPage = function (url) {
+Peon.prototype.redirectPage = function (url) {
 	window.location.href = url;
 }
 
@@ -135,7 +131,7 @@ App.prototype.redirectPage = function (url) {
  * @param footer
  *
  */
-App.prototype.setContentMinHeight = function (content, nav, footer) {
+Peon.prototype.setContentMinHeight = function (content, nav, footer) {
 	 var windowHeight = this.getWindowHeight();
 	 var navHeight = nav[0].offsetHeight;
 	 var footerHeight = footer[0].offsetHeight;
@@ -152,22 +148,10 @@ App.prototype.setContentMinHeight = function (content, nav, footer) {
  * @param imagesArray
  *
  */
-App.prototype.preloadImages = function (imagesArray) {
+Peon.prototype.preloadImages = function (imagesArray) {
 	for (var i = 0; i < imagesArray.length; ++i) {
 		var img = new Image();
 		img.src = this.imgFolder + imagesArray[i];
-	}
-}
-
-/**
- * Initialize FastClick on mobile devices
- *
- * @param null
- * @returns function
- */
-App.prototype.initFastClick = function () {
-	if(this.isMobile()) {
-		FastClick.attach(document.body);
 	}
 }
 
@@ -177,7 +161,7 @@ App.prototype.initFastClick = function () {
  * @param range
  * @returns {number}
  */
-App.prototype.generateRandomNumber = function (range) {
+Peon.prototype.generateRandomNumber = function (range) {
 	var random = Math.floor((Math.random() * range));
 	return random;
 
@@ -190,7 +174,7 @@ App.prototype.generateRandomNumber = function (range) {
  * @param s
  * @returns string
  */
-App.prototype.getUrlParameter = function (q, s) {
+Peon.prototype.getUrlParameter = function (q, s) {
 	s = (s) ? s : window.location.search;
 	var re = new RegExp('&amp;' + q + '=([^&amp;]*)', 'i');
 	return (s = s.replace(/^\?/, '&amp;').match(re)) ? s = s[1] : s = '';
@@ -206,7 +190,7 @@ App.prototype.getUrlParameter = function (q, s) {
  * @param speedAttr
  * @returns function
  */
-App.prototype.bindElSmoothScroll = function (el) {
+Peon.prototype.bindElSmoothScroll = function (el) {
 	var that = this;
 	var navbarHeight = (this.isMobile() ? 0 : $(this.nav).height());
 	$(el).on('click', function(e) {
@@ -225,7 +209,7 @@ App.prototype.bindElSmoothScroll = function (el) {
  * @param element
  * @returns function
  */
- App.prototype.scrollToElement = function (el, speed, offset) {
+ Peon.prototype.scrollToElement = function (el, speed, offset) {
  	var _this = this;
  	this.scrollingElActive = true;
  	$('html, body').animate({
@@ -244,7 +228,7 @@ App.prototype.bindElSmoothScroll = function (el) {
  * @param null
  * @returns
  */
-App.prototype.handleConsole = function () {
+Peon.prototype.handleConsole = function () {
 	if(this.environment == this.environmentStates[1]) {
 		console = {};
 		console.log = function(){return};
@@ -260,7 +244,7 @@ App.prototype.handleConsole = function () {
  * @param offset
  * @returns boolean
  */
-App.prototype.isScrolledToElement = function (elem, offset) {
+Peon.prototype.isScrolledToElement = function (elem, offset) {
 	var docViewTop = $(window).scrollTop();
 	var docViewBottom = docViewTop + $(window).height();
 	var elemTop = elem.offset().top + offset;
@@ -274,7 +258,7 @@ App.prototype.isScrolledToElement = function (elem, offset) {
  * @param phoneElement
  * @returns string
  */
-App.prototype.handlePhoneLinks = function (phoneElement) {
+Peon.prototype.handlePhoneLinks = function (phoneElement) {
 	if(this.isMobile()) {
 		phoneElement.removeClass(this.disabledClass);
 	}
@@ -286,7 +270,7 @@ App.prototype.handlePhoneLinks = function (phoneElement) {
  * @param target
  * @returns integer
  */
-App.prototype.getMaxHeightElement = function (target) {
+Peon.prototype.getMaxHeightElement = function (target) {
 	var maxHeight;
 	var heights = target.map(function ()
 	{
@@ -297,7 +281,7 @@ App.prototype.getMaxHeightElement = function (target) {
 	return maxHeight;
 }
 
-App.prototype.handleErrorPage = function () {
+Peon.prototype.handleErrorPage = function () {
 	if(!this.errorPage.length) {
 		return;
 	}
@@ -306,5 +290,5 @@ App.prototype.handleErrorPage = function () {
 
 
 $(document).ready(function() {
-	app = new App();
+	peon = new Peon();
 });
