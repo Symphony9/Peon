@@ -24,7 +24,11 @@ gulp.task('watch', function() {
 	var watcher = gulp.watch(['./js/*.js'], ['compile']);
 
 	watcher.on('change', function(event) {
-		var filename = event.path.lastIndexOf('/');
+		if (event.path.lastIndexOf('/') > 0) {
+			var filename = event.path.lastIndexOf('/');
+		} else {
+			var filename = event.path.lastIndexOf('\\');
+		}
 		filename = event.path.substr(filename + 1);
 		console.log('File ' + filename + ' was ' + event.type + ', running tasks...');
 	});
