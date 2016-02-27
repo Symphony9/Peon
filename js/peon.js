@@ -315,6 +315,7 @@ Peon.prototype.getMaxHeightElement = function (target) {
  * Check if cookie exists
  *
  * @param cookieName
+ * @returns boolean
  */
  Peon.prototype.checkCookie = function(cookieName) {
 	var cookie = this.getCookie(cookieName);
