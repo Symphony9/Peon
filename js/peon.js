@@ -14,7 +14,7 @@ Peon.prototype.init = function () {
 	this.handlePhoneLinks(this.phoneLink);
 	this.bindListeners();
 	if(this.isIE()) {
-		this.bodyElement.addClass('ie');
+		this.bodyElement.className += this.internetExplorerClass;
 	}
 }
 
@@ -31,13 +31,12 @@ Peon.prototype.loadVariables = function () {
 	this.content = document.getElementsByClassName('Content');
 	this.nav = document.getElementsByClassName('Navbar');
 	this.footer = document.getElementsByClassName('Footer--sticky');
-	this.errorPage = document.getElementsByClassName('.error-section');
 	this.phoneLink = document.getElementsByClassName('.Phone');
 	this.bodyElement = document.getElementsByTagName("body")[0];
 	this.disabledClass = 'Disabled';
 	this.imgFolder = '/img/';
 	this.smoothScroll = '[data-scroll]';
-	this.environment = environment;
+	this.environment = 'develop';
 	this.environmentStates = ['develop', 'production'];
 	this.url = this.getCurrentUrl();
 	this.windowHeight = this.getWindowHeight();
@@ -46,6 +45,7 @@ Peon.prototype.loadVariables = function () {
 	this.mobile = this.isMobile();
 	this.scrollingElActive = false;
 	this.internetExplorer = this.isIE();
+	this.internetExplorerClass = 'IE';
 }
 
 /**
@@ -191,7 +191,7 @@ Peon.prototype.getUrlParameter = function (q, s) {
  */
 Peon.prototype.bindElSmoothScroll = function (el) {
 	var that = this;
-	var navbarHeight = (this.isMobile() ? 0 : $(this.nav).height());
+	/*var navbarHeight = (this.isMobile() ? 0 : this.nav.outerHeight(true));
 	$(el).on('click', function(e) {
 		var speed = $(this).data('scroll-speed');
 		var target = $(this).data('scroll');
@@ -199,7 +199,7 @@ Peon.prototype.bindElSmoothScroll = function (el) {
 			scrollTop: $(target).offset().top - navbarHeight
 		}, speed);
 		e.preventDefault();
-	});
+	});*/
 }
 
 /**
@@ -211,14 +211,14 @@ Peon.prototype.bindElSmoothScroll = function (el) {
  Peon.prototype.scrollToElement = function (el, speed, offset) {
  	var _this = this;
  	this.scrollingElActive = true;
- 	$('html, body').animate({
+ 	/*$('html, body').animate({
  		scrollTop: $(el).offset().top - _this.navbar.navHeight - offset
  	}, speed);
  	if(this.isMobile()) {
  		setTimeout(function() {
 			_this.scrollingElActive = false;
  		}, speed*2);
- 	}
+ 	}*/
  }
 
 /**
@@ -244,11 +244,11 @@ Peon.prototype.handleConsole = function () {
  * @returns boolean
  */
 Peon.prototype.isScrolledToElement = function (elem, offset) {
-	var docViewTop = $(window).scrollTop();
-	var docViewBottom = docViewTop + $(window).height();
+	/*var docViewTop = $(window).scrollTop();
+	var docViewBottom = docViewTop + this.getWindowHeight();
 	var elemTop = elem.offset().top + offset;
 	var elemBottom = elemTop + 10;
-	return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+	return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));*/
 }
 
 /**
@@ -259,7 +259,7 @@ Peon.prototype.isScrolledToElement = function (elem, offset) {
  */
 Peon.prototype.handlePhoneLinks = function (phoneElement) {
 	if(this.isMobile()) {
-		phoneElement.removeClass(this.disabledClass);
+		phoneElement.classList.remove(this.disabledClass);
 	}
 }
 
@@ -273,13 +273,54 @@ Peon.prototype.getMaxHeightElement = function (target) {
 	var maxHeight;
 	var heights = target.map(function ()
 	{
-		return $(this).height();
+		return this.outerHeight(true);
 	}).get(),
 
 	maxHeight = Math.max.apply(null, heights);
 	return maxHeight;
 }
 
-$(document).ready(function() {
-	peon = new Peon();
-});
+/**
+ * Get cookie value by name
+ *
+ * @param cookieName
+ * @returns string
+ */
+ Peon.prototype.getCookie = function(cookieName) {
+	var name = cookieName + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0; i<ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1);
+		if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+	}
+	return "";
+}
+
+/**
+ * Set cookie pair name = value with duration in seconds
+ *
+ * @param cookieName
+ * @param cookieValue
+ * @param cookieDuration
+ */
+ Peon.prototype.setCookie = function(cookieName, cookieValue, cookieDuration) {
+	var d = new Date();
+	d.setTime(d.getTime() + (cookieDuration*24*60*60*1000));
+	var expires = "expires="+d.toUTCString();
+	document.cookie = cookieName + "=" + cookieValue + "; " + expires;
+}
+
+/**
+ * Check if cookie exists
+ *
+ * @param cookieName
+ */
+ Peon.prototype.checkCookie = function(cookieName) {
+	var cookie = this.getCookie(cookieName);
+	if(cookie != "") {
+		return true;
+	} else {
+		return false;
+	}
+}
