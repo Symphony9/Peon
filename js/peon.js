@@ -3,15 +3,24 @@ var peon,
 		'placeholder.jpg'
 	];
 
-var Peon = function () {
+var Peon = function (content, navbar, footer, phone, environment) {
+	this.settings = {
+		'content': content,
+		'navbar': navbar,
+		'footer': footer,
+		'phone': phone,
+		'environment': environment
+	};
 	this.init();
 }
 
 Peon.prototype.init = function () {
-	this.loadVariables();
+	console.log(this.settings);
+	this.loadVariables(this.settings.content, this.settings.navbar, this.settings.footer, this.settings.phone);
 	this.preloadImages(imagesToPreload);
 	this.handleConsole();
 	this.handlePhoneLinks(this.phoneLink);
+	this.setContentMinHeight(this.content, this.nav, this.footer);
 	this.bindListeners();
 	if(this.isIE()) {
 		this.bodyElement.className += this.internetExplorerClass;
@@ -27,16 +36,17 @@ Peon.prototype.bindListeners = function () {
 	}, false);
 }
 
-Peon.prototype.loadVariables = function () {
-	this.content = document.getElementsByClassName('Content');
-	this.nav = document.getElementsByClassName('Navbar');
-	this.footer = document.getElementsByClassName('Footer--sticky');
-	this.phoneLink = document.getElementsByClassName('.Phone');
-	this.bodyElement = document.getElementsByTagName("body")[0];
+Peon.prototype.loadVariables = function (content, navbar, footer, phone) {
+	this.content = document.querySelector(content);
+	this.nav = document.querySelector(navbar);
+	this.footer = document.querySelector(footer);
+	this.phoneLink = document.querySelector(phone);
+	this.bodyElement = document.body;
+	this.htmlElement = document.getElementsByTagName("html")[0];
 	this.disabledClass = 'Disabled';
 	this.imgFolder = '/img/';
 	this.smoothScroll = '[data-scroll]';
-	this.environment = 'develop';
+	this.environment = this.settings.environment;
 	this.environmentStates = ['develop', 'production'];
 	this.url = this.getCurrentUrl();
 	this.windowHeight = this.getWindowHeight();
@@ -131,13 +141,20 @@ Peon.prototype.redirectPage = function (url) {
  *
  */
 Peon.prototype.setContentMinHeight = function (content, nav, footer) {
+	if(content.length > 0 || nav.length > 0 || footer.length > 0) {
+		return;
+	}
 	 var windowHeight = this.getWindowHeight();
-	 var navHeight = nav[0].offsetHeight;
-	 var footerHeight = footer[0].offsetHeight;
-	 var contentHeight = content[0].offsetHeight;
+	 var navHeight = nav.offsetHeight;
+	 var footerHeight = footer.offsetHeight;
+	 var contentHeight = content.offsetHeight;
+	 console.log(windowHeight);
+	 console.log(navHeight);
+	 console.log(footerHeight);
+	 console.log(contentHeight);
 	 if (windowHeight > contentHeight) {
 		 var minHeight = windowHeight - navHeight - footerHeight;
-		 content[0].style.minHeight =  minHeight+"px";
+		 content.style.minHeight =  minHeight+"px";
 	 };
 }
 
@@ -189,9 +206,16 @@ Peon.prototype.getUrlParameter = function (q, s) {
  * @param speedAttr
  * @returns function
  */
-Peon.prototype.bindElSmoothScroll = function (el) {
+Peon.prototype.bindElSmoothScroll = function (element) {
 	var that = this;
-	/*var navbarHeight = (this.isMobile() ? 0 : this.nav.outerHeight(true));
+	var navbarHeight = (this.isMobile() ? 0 : this.nav.offsetHeight);
+	var el = document.querySelector(element);
+	if(el) {
+		el.addEventListener("click", function(e) {
+			
+		},false);
+	}
+	/*
 	$(el).on('click', function(e) {
 		var speed = $(this).data('scroll-speed');
 		var target = $(this).data('scroll');
@@ -205,20 +229,27 @@ Peon.prototype.bindElSmoothScroll = function (el) {
 /**
  *
  * Scrolls to element smoothly
+ *
+ *
  * @param element
+ * @param to
+ * @param duration
  * @returns function
  */
- Peon.prototype.scrollToElement = function (el, speed, offset) {
+ Peon.prototype.scrollToElement = function (element, to, duration) {
  	var _this = this;
  	this.scrollingElActive = true;
- 	/*$('html, body').animate({
- 		scrollTop: $(el).offset().top - _this.navbar.navHeight - offset
- 	}, speed);
- 	if(this.isMobile()) {
- 		setTimeout(function() {
-			_this.scrollingElActive = false;
- 		}, speed*2);
- 	}*/
+    if (duration < 0) {
+    	return
+    };
+    var difference = to - element.scrollTop;
+    var perTick = difference / duration * 2;
+
+    setTimeout(function() {
+        element.scrollTop = element.scrollTop + perTick;
+        if (element.scrollTop === to) return;
+        _this.scrollToElement(element, to, duration - 2);
+    }, 2);
  }
 
 /**
@@ -260,6 +291,10 @@ Peon.prototype.isScrolledToElement = function (elem, offset) {
 Peon.prototype.handlePhoneLinks = function (phoneElement) {
 	if(this.isMobile()) {
 		phoneElement.classList.remove(this.disabledClass);
+	} else {
+		phoneElement.addEventListener('click', function(e) {
+			e.preventDefault();
+		}, false);
 	}
 }
 
