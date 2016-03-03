@@ -111,6 +111,23 @@ Peon.prototype.getUserNavigator = function () {
  * @returns boolean
  */
 Peon.prototype.isMobile = function () {
+	var _this = this;
+	this.isIOS = function() {
+		return /iP(ad|hone|od)/.test(navigator.userAgent);
+	};
+	this.isAndroid = function() {
+		return _this.navigator.match(/Android/i);
+	};
+	this.isBlackBerry = function () {
+		return _this.navigator.match(/BlackBerry/i);
+
+	};
+	this.isOperaMini = function () {
+		return _this.navigator.match(/Opera Mini/i);
+	};
+	this.isWindows = function () {
+		return _this.navigator.match(/IEMobile/i);
+	};
 	return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(this.getUserNavigator());
 };
 
