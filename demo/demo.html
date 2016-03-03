@@ -21,7 +21,14 @@
 
 	<script src="../js/peon.js"></script>
 	<script>
+		// may be whatever logic based on framework used to gain either develop/production environment state
 		var environment = 'develop';
+
+		// for whatever reason you need to simply preload images that might be hover states, carousel backgrounds, ...
+		var imagesToPreload = [
+			'placeholder.jpg'
+		];
+
 		var peon = new Peon(".Content", ".Navbar", ".Footer", ".Phone", environment, '');
 		peon.preloadImages(imagesToPreload);
 	</script>

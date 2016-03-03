@@ -1,8 +1,3 @@
-var peon,
-	imagesToPreload = [
-		'placeholder.jpg'
-	];
-
 /**
  * Definition of Peon object
  * @param content
@@ -116,19 +111,19 @@ Peon.prototype.isMobile = function () {
 		return /iP(ad|hone|od)/.test(navigator.userAgent);
 	};
 	this.isAndroid = function() {
-		return _this.navigator.match(/Android/i);
+		return /Android/i.test(_this.navigator);
 	};
 	this.isBlackBerry = function () {
-		return _this.navigator.match(/BlackBerry/i);
+		return /BlackBerry/i.test(_this.navigator);
 
 	};
 	this.isOperaMini = function () {
-		return _this.navigator.match(/Opera Mini/i);
+		return /Opera Mini/i.test(_this.navigator);
 	};
 	this.isWindows = function () {
-		return _this.navigator.match(/IEMobile/i);
+		return /IEMobile/i.test(_this.navigator);
 	};
-	return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(this.getUserNavigator());
+	return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(_this.navigator);
 };
 
 /**
