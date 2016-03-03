@@ -352,3 +352,12 @@ Peon.prototype.getMaxHeightElement = function (target) {
 	}
 };
 
+/**
+ * Type Of return with object type
+ * @param value
+ * @returns {string}
+ * @constructor
+ */
+Peon.prototype.TypeOf = function (value) {
+	return Object.prototype.toString.call(value).slice(8).replace(']', '');
+};
