@@ -46,3 +46,4 @@ vendor/
 # Unsorted
 config.codekit
 .buildpath
+.idea/

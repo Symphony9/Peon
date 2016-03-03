@@ -3,21 +3,33 @@ var peon,
 		'placeholder.jpg'
 	];
 
-var Peon = function (content, navbar, footer, phone, environment) {
+/**
+ * Definition of Peon object
+ * @param content
+ * @param navbar
+ * @param footer
+ * @param phone
+ * @param environment
+ * @param imgFolder
+ * @constructor
+ */
+var Peon = function (content, navbar, footer, phone, environment, imgFolder) {
 	this.settings = {
 		'content': content,
 		'navbar': navbar,
 		'footer': footer,
 		'phone': phone,
-		'environment': environment
+		'environment': environment,
+		'imgFolder': imgFolder
 	};
 	this.init();
-}
+};
 
+/**
+ * Init function
+ */
 Peon.prototype.init = function () {
-	console.log(this.settings);
-	this.loadVariables(this.settings.content, this.settings.navbar, this.settings.footer, this.settings.phone);
-	this.preloadImages(imagesToPreload);
+	this.loadVariables(this.settings.content, this.settings.navbar, this.settings.footer, this.settings.phone, this.settings.imgFolder);
 	this.handleConsole();
 	this.handlePhoneLinks(this.phoneLink);
 	this.setContentMinHeight(this.content, this.nav, this.footer);
@@ -25,18 +37,30 @@ Peon.prototype.init = function () {
 	if(this.isIE()) {
 		this.bodyElement.className += this.internetExplorerClass;
 	}
-}
+};
 
+/**
+ * Bind events
+ */
 Peon.prototype.bindListeners = function () {
 	var _this = this;
 	this.bindElSmoothScroll(this.smoothScroll);
 	window.addEventListener("resize", function() {
 		_this.windowHeight = _this.getWindowHeight();
 		_this.windowWidth = _this.getWindowWidth();
+		_this.setContentMinHeight(_this.content, _this.nav, _this.footer);
 	}, false);
-}
+};
 
-Peon.prototype.loadVariables = function (content, navbar, footer, phone) {
+/**
+ * Load variables to be used across application
+ * @param content
+ * @param navbar
+ * @param footer
+ * @param phone
+ * @param imgFolder
+ */
+Peon.prototype.loadVariables = function (content, navbar, footer, phone, imgFolder) {
 	this.content = document.querySelector(content);
 	this.nav = document.querySelector(navbar);
 	this.footer = document.querySelector(footer);
@@ -44,7 +68,7 @@ Peon.prototype.loadVariables = function (content, navbar, footer, phone) {
 	this.bodyElement = document.body;
 	this.htmlElement = document.getElementsByTagName("html")[0];
 	this.disabledClass = 'Disabled';
-	this.imgFolder = '/img/';
+	this.imgFolder = imgFolder;
 	this.smoothScroll = '[data-scroll]';
 	this.environment = this.settings.environment;
 	this.environmentStates = ['develop', 'production'];
@@ -56,53 +80,43 @@ Peon.prototype.loadVariables = function (content, navbar, footer, phone) {
 	this.scrollingElActive = false;
 	this.internetExplorer = this.isIE();
 	this.internetExplorerClass = 'IE';
-}
+};
 
 /**
  * Gets user window width
- *
- * @param null
- * @returns number
+ * @returns {Number}
  */
 Peon.prototype.getWindowWidth = function () {
 	return window.innerWidth;
-}
+};
 
 /**
  * Gets user window height
- *
- * @param null
- * @returns number
+ * @returns {Number}
  */
 Peon.prototype.getWindowHeight = function () {
 	return window.innerHeight;
-}
+};
 
 /**
  * Gets user navigator of browser
- *
- * @param null
  * @returns boolean
  */
 Peon.prototype.getUserNavigator = function () {
 	return navigator.userAgent;
-}
+};
 
 /**
  * Detects mobile devices
- *
- * @param null
  * @returns boolean
  */
 Peon.prototype.isMobile = function () {
 	return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(this.getUserNavigator());
-}
+};
 
 /**
  * Detects any kind of IE 5-11
- *
- * @param null
- * @returns boolean
+ * @returns {boolean}
  */
 Peon.prototype.isIE = function () {
 	var userAgent = this.getUserNavigator();
@@ -110,35 +124,29 @@ Peon.prototype.isIE = function () {
 		return true;
 	}
 	return false;
-}
+};
 
 /**
  * Gets current URL
- *
- * @param null
  * @returns string
  */
 Peon.prototype.getCurrentUrl = function () {
 	return window.location.href;
-}
+};
 
 /**
  * Redirects to URL
- *
  * @param url
- *
  */
 Peon.prototype.redirectPage = function (url) {
 	window.location.href = url;
-}
+};
 
 /**
  * Sets content height in case the height of content is not high enough to cover the whole page
- *
  * @param content
  * @param nav
  * @param footer
- *
  */
 Peon.prototype.setContentMinHeight = function (content, nav, footer) {
 	if(content.length > 0 || nav.length > 0 || footer.length > 0) {
@@ -148,32 +156,25 @@ Peon.prototype.setContentMinHeight = function (content, nav, footer) {
 	 var navHeight = nav.offsetHeight;
 	 var footerHeight = footer.offsetHeight;
 	 var contentHeight = content.offsetHeight;
-	 console.log(windowHeight);
-	 console.log(navHeight);
-	 console.log(footerHeight);
-	 console.log(contentHeight);
 	 if (windowHeight > contentHeight) {
 		 var minHeight = windowHeight - navHeight - footerHeight;
 		 content.style.minHeight =  minHeight+"px";
 	 };
-}
+};
 
 /**
  * Preloads images from given array of image names
- *
  * @param imagesArray
- *
  */
 Peon.prototype.preloadImages = function (imagesArray) {
 	for (var i = 0; i < imagesArray.length; ++i) {
 		var img = new Image();
 		img.src = this.imgFolder + imagesArray[i];
 	}
-}
+};
 
 /**
  * Generates random number with defined range
- *
  * @param range
  * @returns {number}
  */
@@ -181,95 +182,77 @@ Peon.prototype.generateRandomNumber = function (range) {
 	var random = Math.floor((Math.random() * range));
 	return random;
 
-}
+};
 
 /**
  * GET parameter from URL
- *
  * @param q
  * @param s
- * @returns string
+ * @returns {string}
  */
 Peon.prototype.getUrlParameter = function (q, s) {
 	s = (s) ? s : window.location.search;
 	var re = new RegExp('&amp;' + q + '=([^&amp;]*)', 'i');
 	return (s = s.replace(/^\?/, '&amp;').match(re)) ? s = s[1] : s = '';
-}
+};
 
 /**
  * Binds smooth on click smooth scroll to target element
  *
  * HTML Example: <a href="#" data-scroll=".target" data-scroll-speed="1000">Sign up now</a>
  *
- * @param el
- * @param targetAttr
- * @param speedAttr
- * @returns function
+ * @param element
  */
 Peon.prototype.bindElSmoothScroll = function (element) {
-	var that = this;
+	var _this = this;
 	var navbarHeight = (this.isMobile() ? 0 : this.nav.offsetHeight);
 	var el = document.querySelector(element);
 	if(el) {
 		el.addEventListener("click", function(e) {
-			
+			e.preventDefault();
+			var speed = el.dataset.scrollSpeed;
+			var target = document.querySelector(el.dataset.scroll);
+			_this.scrollToElement(document.body, target.scrollTop, speed);
 		},false);
 	}
-	/*
-	$(el).on('click', function(e) {
-		var speed = $(this).data('scroll-speed');
-		var target = $(this).data('scroll');
-		$('html, body').animate({
-			scrollTop: $(target).offset().top - navbarHeight
-		}, speed);
-		e.preventDefault();
-	});*/
-}
+};
 
 /**
- *
  * Scrolls to element smoothly
- *
- *
  * @param element
  * @param to
  * @param duration
- * @returns function
  */
  Peon.prototype.scrollToElement = function (element, to, duration) {
- 	var _this = this;
- 	this.scrollingElActive = true;
-    if (duration < 0) {
-    	return
-    };
-    var difference = to - element.scrollTop;
-    var perTick = difference / duration * 2;
+	var _this = this;
+	this.scrollingElActive = true;
+	if (duration < 0) {
+		return
+	};
+	var difference = to - element.scrollTop;
+	var perTick = difference / duration * 2;
 
-    setTimeout(function() {
-        element.scrollTop = element.scrollTop + perTick;
-        if (element.scrollTop === to) return;
-        _this.scrollToElement(element, to, duration - 2);
-    }, 2);
- }
+	setTimeout(function() {
+		element.scrollTop = element.scrollTop + perTick;
+		if (element.scrollTop === to) return;
+		_this.scrollToElement(element, to, duration - 2);
+	}, 2);
+ };
 
 /**
  * Handles console default behaviour. If environment set to production, rewrite console object
- *
- * @param null
- * @returns
  */
 Peon.prototype.handleConsole = function () {
 	if(this.environment == this.environmentStates[1]) {
 		console = {};
-		console.log = function(){return};
-		console.warn = function(){return};
-		console.info = function(){return};
+		console.log = function(){};
+		console.warn = function(){};
+		console.info = function(){};
 	}
-}
+};
 
 /**
  * Detects and returns true/false whether view is scrolled into element
- *
  * @param elem
  * @param offset
  * @returns boolean
@@ -280,29 +263,28 @@ Peon.prototype.isScrolledToElement = function (elem, offset) {
 	var elemTop = elem.offset().top + offset;
 	var elemBottom = elemTop + 10;
 	return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));*/
-}
+};
 
 /**
  * Handles disabled phone links on mobile phones
- *
  * @param phoneElement
- * @returns string
  */
 Peon.prototype.handlePhoneLinks = function (phoneElement) {
-	if(this.isMobile()) {
-		phoneElement.classList.remove(this.disabledClass);
-	} else {
-		phoneElement.addEventListener('click', function(e) {
-			e.preventDefault();
-		}, false);
+	if(phoneElement) {
+		if(this.isMobile()) {
+			phoneElement.classList.remove(this.disabledClass);
+		} else {
+			phoneElement.addEventListener('click', function(e) {
+				e.preventDefault();
+			}, false);
+		}
 	}
-}
+};
 
 /**
  * Get top height of elements with same class
- *
  * @param target
- * @returns integer
+ * @returns {number}
  */
 Peon.prototype.getMaxHeightElement = function (target) {
 	var maxHeight;
@@ -313,13 +295,12 @@ Peon.prototype.getMaxHeightElement = function (target) {
 
 	maxHeight = Math.max.apply(null, heights);
 	return maxHeight;
-}
+};
 
 /**
  * Get cookie value by name
- *
  * @param cookieName
- * @returns string
+ * @returns {*}
  */
  Peon.prototype.getCookie = function(cookieName) {
 	var name = cookieName + "=";
@@ -330,11 +311,10 @@ Peon.prototype.getMaxHeightElement = function (target) {
 		if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
 	}
 	return "";
-}
+};
 
 /**
  * Set cookie pair name = value with duration in seconds
- *
  * @param cookieName
  * @param cookieValue
  * @param cookieDuration
@@ -344,13 +324,12 @@ Peon.prototype.getMaxHeightElement = function (target) {
 	d.setTime(d.getTime() + (cookieDuration*24*60*60*1000));
 	var expires = "expires="+d.toUTCString();
 	document.cookie = cookieName + "=" + cookieValue + "; " + expires;
-}
+};
 
 /**
  * Check if cookie exists
- *
  * @param cookieName
- * @returns boolean
+ * @returns {boolean}
  */
  Peon.prototype.checkCookie = function(cookieName) {
 	var cookie = this.getCookie(cookieName);
@@ -359,4 +338,5 @@ Peon.prototype.getMaxHeightElement = function (target) {
 	} else {
 		return false;
 	}
-}
+};
+
