@@ -258,11 +258,11 @@ Peon.prototype.handleConsole = function () {
  * @returns boolean
  */
 Peon.prototype.isScrolledToElement = function (elem, offset) {
-	/*var docViewTop = $(window).scrollTop();
+	var docViewTop = this.bodyElement.scrollTop;
 	var docViewBottom = docViewTop + this.getWindowHeight();
-	var elemTop = elem.offset().top + offset;
+	var elemTop = elem.offsetTop + offset;
 	var elemBottom = elemTop + 10;
-	return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));*/
+	return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 };
 
 /**
