@@ -375,8 +375,7 @@ Peon.prototype.TypeOf = function (value) {
  * @param value
  */
 Peon.prototype.createConstant = function (key, value) {
-	var _this = this;
-	Object.defineProperty(_this, key, {
+	Object.defineProperty(this, key, {
 		configurable: false,
 		enumerable: true,
 		writable: false,
