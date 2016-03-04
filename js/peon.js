@@ -25,6 +25,7 @@ var Peon = function (content, navbar, footer, phone, environment, imgFolder) {
  */
 Peon.prototype.init = function () {
 	this.loadVariables(this.settings.content, this.settings.navbar, this.settings.footer, this.settings.phone, this.settings.imgFolder);
+	this.setConstants();
 	this.handleConsole();
 	this.handlePhoneLinks(this.phoneLink);
 	this.setContentMinHeight(this.content, this.nav, this.footer);
@@ -62,19 +63,25 @@ Peon.prototype.loadVariables = function (content, navbar, footer, phone, imgFold
 	this.phoneLink = document.querySelector(phone);
 	this.bodyElement = document.body;
 	this.htmlElement = document.getElementsByTagName("html")[0];
-	this.disabledClass = 'Disabled';
 	this.imgFolder = imgFolder;
-	this.smoothScroll = '[data-scroll]';
 	this.environment = this.settings.environment;
-	this.environmentStates = ['develop', 'production'];
 	this.url = this.getCurrentUrl();
 	this.windowHeight = this.getWindowHeight();
 	this.windowWidth = this.getWindowWidth();
 	this.navigator = this.getUserNavigator();
 	this.mobile = this.isMobile();
 	this.scrollingElActive = false;
-	this.internetExplorer = this.isIE();
-	this.internetExplorerClass = 'IE';
+};
+
+/**
+ * Set constants for Peon Object
+ */
+Peon.prototype.setConstants = function() {
+	this.createConstant('internetExplorer',this.isIE());
+	this.createConstant('smoothScroll', '[data-scroll]');
+	this.createConstant('disabledClass', 'Disabled');
+	this.createConstant('internetExplorerClass', 'IE');
+	this.createConstant('environmentStates', ['develop', 'production']);
 };
 
 /**
@@ -361,6 +368,7 @@ Peon.prototype.getMaxHeightElement = function (target) {
 Peon.prototype.TypeOf = function (value) {
 	return Object.prototype.toString.call(value).slice(8).replace(']', '');
 };
+
 /**
  * Constants creator helper for peon object
  * @param key
@@ -368,7 +376,7 @@ Peon.prototype.TypeOf = function (value) {
  */
 Peon.prototype.createConstant = function (key, value) {
 	var _this = this;
-	Object.defineProperty(this, key, {
+	Object.defineProperty(_this, key, {
 		configurable: false,
 		enumerable: true,
 		writable: false,
