@@ -225,14 +225,21 @@ Peon.prototype.getUrlParameter = function (q, s) {
 Peon.prototype.bindElSmoothScroll = function (element) {
 	var _this = this;
 	var navbarHeight = (this.isMobile() ? 0 : this.nav.offsetHeight);
-	var el = document.querySelector(element);
+	var el = document.querySelectorAll(element);
 	if(el) {
-		el.addEventListener("click", function(e) {
-			e.preventDefault();
-			var speed = el.dataset.scrollSpeed;
-			var target = document.querySelector(el.dataset.scroll);
-			_this.scrollToElement(document.body, target.offsetTop, speed);
-		},false);
+		for (var i = 0; i < el.length; i++) {
+			var foo = el[i];
+			el[i].addEventListener("click", function(e) {
+				var speed = this.dataset.scrollSpeed;
+				var target = this.dataset.scroll;
+				target = document.querySelector(target);
+				if(target) {
+					_this.scrollToElement(document.body, target.offsetTop, speed);
+				}
+				e.preventDefault();
+			},false);
+			foo = '';
+		}
 	}
 };
 
