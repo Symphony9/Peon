@@ -231,7 +231,7 @@ Peon.prototype.bindElSmoothScroll = function (element) {
 			e.preventDefault();
 			var speed = el.dataset.scrollSpeed;
 			var target = document.querySelector(el.dataset.scroll);
-			_this.scrollToElement(document.body, target.scrollTop, speed);
+			_this.scrollToElement(document.body, target.offsetTop, speed);
 		},false);
 	}
 };
