@@ -316,7 +316,7 @@ Peon.prototype.getMaxHeightElement = function (target) {
 	var maxHeight;
 	var heights = target.map(function ()
 	{
-		return this.outerHeight(true);
+		return this.offsetHeight;
 	}).get(),
 
 	maxHeight = Math.max.apply(null, heights);
