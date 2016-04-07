@@ -236,7 +236,11 @@ Peon.prototype.bindElSmoothScroll = function (element, navHeight) {
 				var top = getComputedStyle(_this.bodyElement);
 				top = parseInt(top.paddingTop.replace('px', ''));
 				if(target) {
-					_this.scrollToElement(document.body, target.offsetTop + top, speed);
+					if(_this.internetExplorer) {
+						_this.scrollToElement(document.documentElement, target.offsetTop + top, speed);
+					} else {
+						_this.scrollToElement(document.body, target.offsetTop + top, speed);
+					}
 				}
 				e.preventDefault();
 			},false);
