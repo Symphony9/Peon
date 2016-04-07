@@ -222,7 +222,7 @@ Peon.prototype.getUrlParameter = function (q, s) {
  *
  * @param element
  */
-Peon.prototype.bindElSmoothScroll = function (element) {
+Peon.prototype.bindElSmoothScroll = function (element, navHeight) {
 	var _this = this;
 	var navbarHeight = (this.isMobile() ? 0 : this.nav.offsetHeight);
 	var el = document.querySelectorAll(element);
@@ -233,8 +233,10 @@ Peon.prototype.bindElSmoothScroll = function (element) {
 				var speed = this.dataset.scrollSpeed;
 				var target = this.dataset.scroll;
 				target = document.querySelector(target);
+				var top = getComputedStyle(_this.bodyElement);
+				top = parseInt(top.paddingTop.replace('px', ''));
 				if(target) {
-					_this.scrollToElement(document.body, target.offsetTop, speed);
+					_this.scrollToElement(document.body, target.offsetTop + top, speed);
 				}
 				e.preventDefault();
 			},false);
@@ -251,6 +253,9 @@ Peon.prototype.bindElSmoothScroll = function (element) {
  */
  Peon.prototype.scrollToElement = function (element, to, duration) {
 	var _this = this;
+	if(!this.scrollingElActive) {
+		to = to - this.nav.offsetHeight;
+	}
 	this.scrollingElActive = true;
 	if (duration < 0) {
 		return
@@ -260,7 +265,10 @@ Peon.prototype.bindElSmoothScroll = function (element) {
 
 	setTimeout(function() {
 		element.scrollTop = element.scrollTop + perTick;
-		if (element.scrollTop === to) return;
+		if (element.scrollTop === to) {
+			_this.scrollingElActive = false;
+			return;
+		};
 		_this.scrollToElement(element, to, duration - 2);
 	}, 2);
  };
