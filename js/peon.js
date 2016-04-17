@@ -40,7 +40,7 @@ Peon.prototype.init = function () {
  */
 Peon.prototype.bindListeners = function () {
 	var _this = this;
-	this.bindElSmoothScroll(this.smoothScroll);
+	//this.bindElSmoothScroll(this.smoothScroll);
 	window.addEventListener("resize", function() {
 		_this.windowHeight = _this.getWindowHeight();
 		_this.windowWidth = _this.getWindowWidth();
